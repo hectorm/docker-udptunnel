@@ -21,7 +21,7 @@ USER "${USER}:${GROUP}"
 
 # Environment
 ENV CFLAGS='-O2 -fPIC -fPIE -fstack-protector-strong -frandom-seed=42 -Wformat -Werror=format-security'
-ENV CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2'
+ENV CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2 -DHAVE_GETOPT_LONG=1'
 ENV LDFLAGS='--static -Wl,-z,relro -Wl,-z,now'
 ENV LC_ALL=C TZ=UTC SOURCE_DATE_EPOCH=1
 
@@ -52,7 +52,7 @@ COPY --from=build /tmp/udptunnel/udptunnel /
 FROM base AS test
 m4_ifdef([[CROSS_QEMU]], [[COPY --from=docker.io/hectormolinero/qemu-user-static:latest CROSS_QEMU CROSS_QEMU]])
 
-RUN ["/udptunnel", "-h"]
+RUN ["/udptunnel", "--help"]
 
 ##################################################
 ## "udptunnel" stage
@@ -61,4 +61,4 @@ RUN ["/udptunnel", "-h"]
 FROM base AS udptunnel
 
 ENTRYPOINT ["/udptunnel"]
-CMD ["-h"]
+CMD ["--help"]
