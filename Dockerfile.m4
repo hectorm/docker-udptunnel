@@ -20,10 +20,10 @@ RUN adduser -S -G "${GROUP:?}" "${USER:?}"
 USER "${USER}:${GROUP}"
 
 # Environment
-ENV CFLAGS='-O2 -fPIC -fPIE -fstack-protector-strong -frandom-seed=42 -Wformat -Werror=format-security'
+ENV CFLAGS='-O2 -fstack-protector-strong -frandom-seed=42 -Wformat -Werror=format-security'
 m4_ifelse(CROSS_ARCH, amd64, [[ENV CFLAGS="${CFLAGS} -fstack-clash-protection -fcf-protection=full"]])
 ENV CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2 -DHAVE_GETOPT_LONG=1'
-ENV LDFLAGS='-static -Wl,-pie -Wl,-z,defs -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack'
+ENV LDFLAGS='-static -Wl,-z,defs -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack'
 ENV LC_ALL=C TZ=UTC SOURCE_DATE_EPOCH=1
 
 # Build udptunnel
