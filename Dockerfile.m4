@@ -27,7 +27,7 @@ ENV LDFLAGS='-static -Wl,-z,defs -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack'
 ENV LC_ALL=C TZ=UTC SOURCE_DATE_EPOCH=1
 
 # Build udptunnel
-ARG UDPTUNNEL_TREEISH=5a3c103505f7a84ffd154ab0b73dbd237b91e6a4
+ARG UDPTUNNEL_TREEISH=v2
 ARG UDPTUNNEL_REMOTE=https://github.com/hectorm/udptunnel.git
 RUN mkdir /tmp/udptunnel/
 WORKDIR /tmp/udptunnel/
