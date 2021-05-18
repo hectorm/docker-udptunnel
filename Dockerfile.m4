@@ -43,7 +43,6 @@ RUN strip -s ./udptunnel
 
 FROM scratch AS base
 
-# Copy udptunnel binary
 COPY --from=build /tmp/udptunnel/udptunnel /
 
 ##################################################
@@ -53,7 +52,15 @@ COPY --from=build /tmp/udptunnel/udptunnel /
 FROM base AS test
 m4_ifdef([[CROSS_QEMU]], [[COPY --from=docker.io/hectormolinero/qemu-user-static:latest CROSS_QEMU CROSS_QEMU]])
 
-RUN ["/udptunnel", "--help"]
+COPY --from=docker.io/busybox:musl /bin/busybox /busybox
+SHELL ["/busybox", "sh", "-c"]
+
+RUN /busybox printf 'Hello world!\n' > /in; \
+	/busybox nc -v -l -u -s 127.0.0.1 -p 51820 > /out & /busybox sleep 1; \
+	/udptunnel  -v -s 127.0.0.1:8080  127.0.0.1:51820 & /busybox sleep 1; \
+	/udptunnel  -v    127.0.0.1:51821 127.0.0.1:8080  & /busybox sleep 1; \
+	/busybox nc -v -u 127.0.0.1 51821 < /in           & /busybox sleep 1; \
+	/busybox cmp /in /out
 
 ##################################################
 ## "udptunnel" stage
