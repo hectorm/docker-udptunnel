@@ -45,6 +45,9 @@ FROM scratch AS base
 
 COPY --from=build /tmp/udptunnel/udptunnel /
 
+ENTRYPOINT ["/udptunnel"]
+CMD ["--help"]
+
 ##################################################
 ## "test" stage
 ##################################################
@@ -63,10 +66,7 @@ RUN /busybox printf 'Hello world!\n' > /in; \
 	/busybox cmp /in /out
 
 ##################################################
-## "udptunnel" stage
+## "main" stage
 ##################################################
 
-FROM base AS udptunnel
-
-ENTRYPOINT ["/udptunnel"]
-CMD ["--help"]
+FROM base AS main
