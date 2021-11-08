@@ -10,5 +10,5 @@ docker run --rm --network host -it hectormolinero/udptunnel:latest --help
 ## Export build to local filesystem
 ```sh
 docker pull hectormolinero/udptunnel:latest
-docker save hectormolinero/udptunnel:latest | tar -xO --wildcards '*/layer.tar' | tar -xi
+docker save hectormolinero/udptunnel:latest | tar -xO --wildcards '*/layer.tar' | tar -xi udptunnel
 ```
