@@ -35,7 +35,7 @@ IMAGE_ARM64V8_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT).arm64v8.tzst
 IMAGE_ARM32V7_DOCKERFILE := $(DISTDIR)/Dockerfile.arm32v7
 IMAGE_ARM32V7_TARBALL := $(DISTDIR)/$(IMAGE_PROJECT).arm32v7.tzst
 
-export DOCKER_BUILDKIT := 1
+export DOCKER_BUILDKIT := 0
 export BUILDKIT_PROGRESS := plain
 
 ##################################################
