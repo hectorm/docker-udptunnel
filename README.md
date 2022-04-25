@@ -4,11 +4,11 @@ A statically linked build of [udptunnel](https://github.com/hectorm/udptunnel) i
 
 ## Usage
 ```sh
-docker run --rm --network host -it hectormolinero/udptunnel:latest --help
+docker run --rm --network host -it docker.io/hectorm/udptunnel:latest --help
 ```
 
 ## Export build to local filesystem
 ```sh
-docker pull hectormolinero/udptunnel:latest
-docker save hectormolinero/udptunnel:latest | tar -xO --wildcards '*/layer.tar' | tar -xi udptunnel
+docker pull docker.io/hectorm/udptunnel:latest
+docker save docker.io/hectorm/udptunnel:latest | tar -xO --wildcards '*/layer.tar' | tar -xi udptunnel
 ```
