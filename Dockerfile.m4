@@ -38,23 +38,13 @@ RUN make -j"$(nproc)"
 RUN strip -s ./udptunnel
 
 ##################################################
-## "base" stage
-##################################################
-
-FROM scratch AS base
-
-COPY --from=build /tmp/udptunnel/udptunnel /
-
-ENTRYPOINT ["/udptunnel"]
-CMD ["--help"]
-
-##################################################
 ## "test" stage
 ##################################################
 
-FROM base AS test
+FROM scratch AS test
 m4_ifdef([[CROSS_QEMU]], [[COPY --from=docker.io/hectorm/qemu-user-static:latest CROSS_QEMU CROSS_QEMU]])
 
+COPY --from=build /tmp/udptunnel/udptunnel /
 COPY --from=docker.io/busybox:musl /bin/busybox /busybox
 
 RUN ["/busybox", "sh", "-c", "/busybox printf 'Hello world!\n' > /in; \
@@ -68,7 +58,9 @@ RUN ["/busybox", "sh", "-c", "/busybox printf 'Hello world!\n' > /in; \
 ## "main" stage
 ##################################################
 
-FROM base AS main
+FROM scratch AS base
 
-# Dummy instruction so BuildKit does not skip the test stage
-RUN --mount=type=bind,from=test,source=/udptunnel,target=/udptunnel ["/udptunnel", "--help"]
+COPY --from=test /udptunnel /
+
+ENTRYPOINT ["/udptunnel"]
+CMD ["--help"]
