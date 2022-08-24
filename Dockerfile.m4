@@ -19,23 +19,17 @@ RUN addgroup -S "${GROUP:?}"
 RUN adduser -S -G "${GROUP:?}" "${USER:?}"
 USER "${USER}:${GROUP}"
 
-# Environment
-ENV CFLAGS='-O2 -fstack-protector-strong -frandom-seed=42 -Wformat -Werror=format-security'
-m4_ifelse(CROSS_ARCH, amd64, [[ENV CFLAGS="${CFLAGS} -fstack-clash-protection -fcf-protection=full"]])
-ENV CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2 -DHAVE_GETOPT_LONG=1'
-ENV LDFLAGS='-static -Wl,-z,defs -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack'
-ENV LC_ALL=C TZ=UTC SOURCE_DATE_EPOCH=1
-
 # Build udptunnel
-ARG UDPTUNNEL_TREEISH=v2
+ARG UDPTUNNEL_TREEISH=v3
 ARG UDPTUNNEL_REMOTE=https://github.com/hectorm/udptunnel.git
 RUN mkdir /tmp/udptunnel/
 WORKDIR /tmp/udptunnel/
 RUN git clone "${UDPTUNNEL_REMOTE:?}" ./
 RUN git checkout "${UDPTUNNEL_TREEISH:?}"
 RUN git submodule update --init --recursive
-RUN make -j"$(nproc)"
+RUN make all STATIC=1
 RUN strip -s ./udptunnel
+RUN ./udptunnel --help
 
 ##################################################
 ## "test" stage
