@@ -35,7 +35,7 @@ RUN ./udptunnel --help
 ## "test" stage
 ##################################################
 
-FROM scratch AS test
+m4_ifdef([[CROSS_ARCH]], [[FROM docker.io/hectorm/scratch:CROSS_ARCH]], [[FROM scratch]]) AS test
 m4_ifdef([[CROSS_QEMU]], [[COPY --from=docker.io/hectorm/qemu-user-static:latest CROSS_QEMU CROSS_QEMU]])
 
 COPY --from=build /tmp/udptunnel/udptunnel /
@@ -52,7 +52,7 @@ RUN ["/busybox", "sh", "-c", "/busybox printf 'Hello world!\n' > /in; \
 ## "main" stage
 ##################################################
 
-FROM scratch AS base
+m4_ifdef([[CROSS_ARCH]], [[FROM docker.io/hectorm/scratch:CROSS_ARCH]], [[FROM scratch]]) AS main
 
 COPY --from=test /udptunnel /
 
